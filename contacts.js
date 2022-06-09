@@ -16,9 +16,7 @@ async function listContacts() {
 async function getContactById(contactId) {
   try {
     const data = await listContacts();
-    return console.log(
-      data.filter((contact) => contact.id === String(contactId))
-    );
+    return data.filter((contact) => contact.id === String(contactId));
   } catch (err) {
     console.log(err);
   }

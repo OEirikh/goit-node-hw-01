@@ -18,8 +18,9 @@ const argv = program.opts();
 async function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
     case "list":
-      const getistContacts = await contacts.listContacts();
-      console.table(getistContacts);
+      const getListContacts = await contacts.listContacts();
+      console.log("ContactsList :".magenta);
+      console.table(getListContacts);
       break;
 
     case "get":
@@ -27,7 +28,12 @@ async function invokeAction({ action, id, name, email, phone }) {
         throw new Error("\x1B[31m No such parameters");
       }
       const getContact = await contacts.getContactById(id);
-      getContact && console.log("getContact :", getContact);
+
+      if (getContact.length === 0) {
+        throw new Error(`\x1B[31m No such contact with id = ${id}`);
+      }
+      console.log("getContact".magenta, getContact);
+
       break;
 
     case "add":
@@ -35,7 +41,7 @@ async function invokeAction({ action, id, name, email, phone }) {
         throw new Error("\x1B[31m No such parameters");
       }
       const addedContact = await contacts.addContact(name, email, phone);
-      console.log("addedContact :".magenta, addedContact);
+      console.log("addedContact".magenta, addedContact);
       break;
 
     case "remove":
