@@ -1,35 +1,59 @@
-const {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-} = require("./contacts");
-// const argv = require("yargs").argv;
+const contacts = require("./contacts");
+const colors = require("colors");
+const { Command } = require("commander");
 
-getContactById("3");
-// // TODO: рефакторить
+const program = new Command();
 
-// function invokeAction({ action, id, name, email, phone }) {
-//   switch (action) {
-//     case "list":
-//       // ...
-//       break;
+program
+  .option("-a, --action <type>", "Action type")
+  .option("-i, --id <type>", "Contact id")
+  .option("-n, --name <type>", "Contact name")
+  .option("-e, --email <type>", "Contact email")
+  .option("-p, --phone <type>", "Contact phone");
 
-//     case "get":
-//       // ... id
-//       break;
+program.parse(process.argv);
 
-//     case "add":
-//       // ... name email phone
-//       break;
+const argv = program.opts();
 
-//     case "remove":
-//       // ... id
-//       break;
+async function invokeAction({ action, id, name, email, phone }) {
+  switch (action) {
+    case "list":
+      const getistContacts = await contacts.listContacts();
+      console.table(getistContacts);
+      break;
 
-//     default:
-//       console.warn("\x1B[31m Unknown action type!");
-//   }
-// }
+    case "get":
+      if (!id) {
+        throw new Error("\x1B[31m No such parameters");
+      }
+      const getContact = await contacts.getContactById(id);
+      getContact && console.log("getContact :", getContact);
+      break;
 
-// invokeAction(argv);
+    case "add":
+      if (!name || !email || !phone) {
+        throw new Error("\x1B[31m No such parameters");
+      }
+      const addedContact = await contacts.addContact(name, email, phone);
+      console.log("addedContact :".magenta, addedContact);
+      break;
+
+    case "remove":
+      if (!id) {
+        throw new Error("\x1B[31m No such parameters");
+      }
+      const removeContact = await contacts.removeContact(id);
+
+      if (removeContact.length === 0) {
+        throw new Error(`\x1B[31m No such contact with id = ${id}`);
+      }
+      console.log("contact".magenta, removeContact, "is deleted".magenta);
+
+      break;
+
+    default:
+      console.warn("\x1B[31m Unknown action type!");
+  }
+}
+
+invokeAction(argv);
