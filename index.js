@@ -48,12 +48,13 @@ async function invokeAction({ action, id, name, email, phone }) {
       if (!id) {
         throw new Error("\x1B[31m No such parameters");
       }
-      const removeContact = await contacts.removeContact(id);
+      const deletedContact = await contacts.removeContact(id);
 
-      if (removeContact.length === 0) {
+      if (deletedContact.length === 0) {
         throw new Error(`\x1B[31m No such contact with id = ${id}`);
       }
-      console.log("contact".magenta, removeContact, "is deleted".magenta);
+
+      console.log("deletedContact :".magenta, deletedContact);
 
       break;
 

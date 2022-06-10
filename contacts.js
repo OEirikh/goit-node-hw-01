@@ -2,7 +2,7 @@ const fs = require("fs/promises");
 const path = require("node:path");
 const { v4: uuidv4 } = require("uuid");
 
-const contactsPath = path.normalize("./db/contacts.json");
+const contactsPath = path.resolve("./db/contacts.json");
 
 async function listContacts() {
   try {
@@ -44,13 +44,17 @@ async function addContact(name, email, phone) {
 }
 
 async function removeContact(contactId) {
-  const contacts = await listContacts();
   try {
+    const contacts = await listContacts();
     const newContacts = contacts.filter(
       (contact) => contact.id !== String(contactId)
     );
     await fs.writeFile(contactsPath, JSON.stringify(newContacts), "utf8");
-    return contacts.filter((contact) => contact.id === contactId);
+    const deletedContact = contacts.filter(
+      (contact) => contact.id === contactId
+    );
+
+    return deletedContact;
   } catch (err) {
     console.error(err);
   }
