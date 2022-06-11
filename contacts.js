@@ -24,10 +24,8 @@ async function getContactById(contactId) {
 
 async function addContact(name, email, phone) {
   try {
-    const id = uuidv4();
-
     const newContact = {
-      id,
+      id: uuidv4(),
       name,
       email,
       phone,

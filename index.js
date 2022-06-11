@@ -10,7 +10,6 @@ program
   .option("-n, --name <type>", "Contact name")
   .option("-e, --email <type>", "Contact email")
   .option("-p, --phone <type>", "Contact phone");
-
 program.parse(process.argv);
 
 const argv = program.opts();
